@@ -81,37 +81,12 @@ class Signup extends Component {
         body: 'customer='+cust_id+'&plan=1'
       }).then((response) => response.json())
         .then((responseJson) => {
-            this.saveToFireBase()
               console.log(responseJson);
         })
         .catch((error) => {
           console.error(error);
         });
   }
-  saveToFireBase(){
-      firebase.auth().createUserWithEmailAndPassword(username, password)
-        .then(
-          function (data) {
-            console.log("Yes, user is logged in");
-
-            var vendor = {
-              company: companyName,
-              phone: phoneNumber,
-              uid: data.uid,
-            };
-
-            firebase.database().ref().child('users').child(data.uid).update(vendor);
-
-            browserHistory.push('/');
-          }
-        )
-        .catch(function (error) {
-          // Handle Errors here.
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          console.log(error.message);
-          displayError(error.message);
-    }
   authenticate(username, password, companyName, phoneNumber) {
     const displayError = (error) => {
       this.setState({error: error});
@@ -132,6 +107,54 @@ class Signup extends Component {
           .catch((error) => {
             console.error(error);
           });
+
+
+    //
+    // var customer = stripe.customers.create({
+    //   email: "jenny.rosen@example.com",
+    // }, function(err, customer) {
+    //   // asynchronously called
+    // });
+
+    // window.stripe.createToken(this.card.card)
+    //   .then(({error, token}) => {
+    //     if (error) {
+    //       console.log(error.message);
+    //     } else {
+    //
+    //       if (Config.adminConfig.allowedUsers !== null && Config.adminConfig.allowedUsers.indexOf(username) === -1) {
+    //         //Error, this user is not allowed anyway
+    //         displayError("This user doens't have access to this admin panel!");
+    //       } else {
+
+            firebase.auth().createUserWithEmailAndPassword(username, password)
+              .then(
+                function (data) {
+                  console.log("Yes, user is logged in");
+
+                  var vendor = {
+                    company: companyName,
+                    phone: phoneNumber,
+                    uid: data.uid,
+                  };
+
+                  firebase.database().ref().child('users').child(data.uid).update(vendor);
+
+                  browserHistory.push('/');
+                }
+              )
+              .catch(function (error) {
+                // Handle Errors here.
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                console.log(error.message);
+                displayError(error.message);
+
+              });
+          // }
+      //   }
+      //
+      // });
   }
 
   render() {

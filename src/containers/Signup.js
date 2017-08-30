@@ -82,7 +82,7 @@ class Signup extends Component {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': 'Bearer sk_test_gIbNdXuQloKAgEhDcsGCi09i'
+                'Authorization': 'Bearer sk_test_7JptRhoLDP2UzOEaPnaDUmQi'
             },
         }).then((response) => response.json()).then((responseJson) => {
             console.log(responseJson);
@@ -101,7 +101,7 @@ class Signup extends Component {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': 'Bearer sk_test_gIbNdXuQloKAgEhDcsGCi09i'
+                'Authorization': 'Bearer sk_test_7JptRhoLDP2UzOEaPnaDUmQi'
             },
             body: 'source[object]=card&source[number]=' + this.state.cardNumber + '&source[exp_month]=' + this.state.expMonth + '&source[exp_year]=' + this.state.expYear
         }).then((response) => response.json()).then((responseJson) => {
@@ -130,7 +130,7 @@ class Signup extends Component {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': 'Bearer sk_test_gIbNdXuQloKAgEhDcsGCi09i'
+                'Authorization': 'Bearer sk_test_7JptRhoLDP2UzOEaPnaDUmQi'
             },
             body: 'customer=' + cust_id + '&plan=' + this.state.plan
         }).then((response) => response.json()).then((responseJson) => {
@@ -187,7 +187,7 @@ class Signup extends Component {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': 'Bearer sk_test_gIbNdXuQloKAgEhDcsGCi09i'
+                    'Authorization': 'Bearer sk_test_7JptRhoLDP2UzOEaPnaDUmQi'
                 },
                 body: 'email=' + username + '&description=' + username
             }).then((response) => response.json()).then((responseJson) => {

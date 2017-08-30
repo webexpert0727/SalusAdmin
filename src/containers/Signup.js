@@ -1,161 +1,210 @@
-import React, { Component } from 'react';
-import { Row, Col, Alert } from 'react-bootstrap';
+import React, {
+    Component
+} from 'react';
+import {
+    Row,
+    Col,
+    Alert
+} from 'react-bootstrap';
 import firebase from '../config/database'
-import Config from   '../config/app';
-import { browserHistory } from 'react-router';
-import Plans from '../components/Plans/Plans';
-import Card from '../components/Card/Card';
-
+import Config from '../config/app';
+import {
+    browserHistory
+} from 'react-router';
 class Signup extends Component {
-
-  constructor(props) {
-
-    super(props);
-    this.state = {
-      username: '',
-      password: '',
-      companyName: '',
-      phoneNumber: '',
-      error:'',
-      plan: '',
-      name: '',
-    };
-
-    this.handleChangeUsername = this.handleChangeUsername.bind(this);
-    this.handleChangePassword = this.handleChangePassword.bind(this);
-    this.handleChangeCompany = this.handleChangeCompany.bind(this);
-    this.handleChangePhone = this.handleChangePhone.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.authenticate = this.authenticate.bind(this);
-  }
-
-
-
-  handleChangeUsername(event) {
-    this.setState({username: event.target.value});
-  }
-
-  handleChangePassword(event) {
-    this.setState({password: event.target.value});
-  }
-
+    constructor(props) {
+        super(props);
+        this.state = {
+            username: '',
+            password: '',
+            companyName: '',
+            phoneNumber: '',
+            error: '',
+            plan: '1',
+            cardNumber: '4242424242424242',
+            expYear: 2020,
+            expMonth: 12,
+            name: '',
+        };
+        this.handleChangeUsername = this.handleChangeUsername.bind(this);
+        this.handleChangePassword = this.handleChangePassword.bind(this);
+        this.handleChangeCompany = this.handleChangeCompany.bind(this);
+        this.handleChangePhone = this.handleChangePhone.bind(this);
+        this.handleChangeCardNumber = this.handleChangeCardNumber.bind(this);
+        this.handleChangeExpMonth = this.handleChangeExpMonth.bind(this);
+        this.handleChangeExpYear = this.handleChangeExpYear.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.authenticate = this.authenticate.bind(this);
+    }
+    handleChangeUsername(event) {
+        this.setState({
+            username: event.target.value
+        });
+    }
+    handleChangePassword(event) {
+        this.setState({
+            password: event.target.value
+        });
+    }
     handleChangeCompany(event) {
-    this.setState({companyName: event.target.value});
-  }
-
-  handleChangePhone(event) {
-    this.setState({phoneNumber: event.target.value});
-  }
-
-  handleSubmit(event) {
-    //alert('Username: ' + this.state.username+ " Password: "+this.state.password);
-    this.authenticate(this.state.username, this.state.password, this.state.companyName, this.state.phoneNumber);
-    event.preventDefault();
-  }
-  createCard(cust_id) {
-      fetch('https://api.stripe.com/v1/customers/'+cust_id+'/sources', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization' : 'Bearer sk_test_7JptRhoLDP2UzOEaPnaDUmQi'
-        },
-        body: 'source[object]=card&source[number]=4242424242424242&source[exp_month]=12&source[exp_year]=2018'
-      }).then((response) => response.json())
-        .then((responseJson) => {
-                this.createSubscriptions(cust_id);
-              console.log(responseJson);
-        })
-        .catch((error) => {
-          console.error(error);
+        this.setState({
+            companyName: event.target.value
         });
-  }
-  createSubscriptions(cust_id) {
-      fetch('https://api.stripe.com/v1/subscriptions', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization' : 'Bearer sk_test_7JptRhoLDP2UzOEaPnaDUmQi'
-        },
-        body: 'customer='+cust_id+'&plan=1'
-      }).then((response) => response.json())
-        .then((responseJson) => {
-              console.log(responseJson);
-        })
-        .catch((error) => {
-          console.error(error);
+    }
+    handleChangePhone(event) {
+        this.setState({
+            phoneNumber: event.target.value
         });
-  }
-  authenticate(username, password, companyName, phoneNumber) {
-    const displayError = (error) => {
-      this.setState({error: error});
-    };
-        fetch('https://api.stripe.com/v1/customers', {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization' : 'Bearer sk_test_7JptRhoLDP2UzOEaPnaDUmQi'
-          },
-          body: 'email=arsl@gmail.com&description=arslan'
-        }).then((response) => response.json())
-          .then((responseJson) => {
-                this.createCard(responseJson.id);
-                console.log(responseJson);
-          })
-          .catch((error) => {
+    }
+    handleChangeCardNumber(event) {
+        this.setState({
+            cardNumber: event.target.value
+        });
+    }
+    handleChangeExpMonth(event) {
+        this.setState({
+            expMonth: event.target.value
+        });
+    }
+    handleChangeExpYear(event) {
+        this.setState({
+            expYear: event.target.value
+        });
+    }
+    handleSubmit(event) {
+        //alert('Username: ' + this.state.username+ " Password: "+this.state.password);
+        this.authenticate(this.state.username, this.state.password, this.state.companyName, this.state.phoneNumber);
+        event.preventDefault();
+    }
+    deleteCustomer(cust_id) {
+        fetch('https://api.stripe.com/v1/customers/' + cust_id, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': 'Bearer sk_test_gIbNdXuQloKAgEhDcsGCi09i'
+            },
+        }).then((response) => response.json()).then((responseJson) => {
+            console.log(responseJson);
+        }).catch((error) => {
             console.error(error);
-          });
-
-
-    //
-    // var customer = stripe.customers.create({
-    //   email: "jenny.rosen@example.com",
-    // }, function(err, customer) {
-    //   // asynchronously called
-    // });
-
-    // window.stripe.createToken(this.card.card)
-    //   .then(({error, token}) => {
-    //     if (error) {
-    //       console.log(error.message);
-    //     } else {
-    //
-    //       if (Config.adminConfig.allowedUsers !== null && Config.adminConfig.allowedUsers.indexOf(username) === -1) {
-    //         //Error, this user is not allowed anyway
-    //         displayError("This user doens't have access to this admin panel!");
-    //       } else {
-
-            firebase.auth().createUserWithEmailAndPassword(username, password)
-              .then(
-                function (data) {
-                  console.log("Yes, user is logged in");
-
-                  var vendor = {
-                    company: companyName,
-                    phone: phoneNumber,
-                    uid: data.uid,
-                  };
-
-                  firebase.database().ref().child('users').child(data.uid).update(vendor);
-
-                  browserHistory.push('/');
+        });
+    }
+    createCard(cust_id) {
+        const displayError = (error) => {
+            this.setState({
+                error: error
+            });
+        };
+        fetch('https://api.stripe.com/v1/customers/' + cust_id + '/sources', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': 'Bearer sk_test_gIbNdXuQloKAgEhDcsGCi09i'
+            },
+            body: 'source[object]=card&source[number]=' + this.state.cardNumber + '&source[exp_month]=' + this.state.expMonth + '&source[exp_year]=' + this.state.expYear
+        }).then((response) => response.json()).then((responseJson) => {
+            if (responseJson.error) {
+                var errorCode = responseJson.error.code;
+                var errorMessage = responseJson.error.message;
+                console.log(responseJson.error.message);
+                displayError(responseJson.error.message);
+                this.deleteCustomer(cust_id);
+            } else {
+                this.createSubscriptions(cust_id);
+                console.log(responseJson);
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
+    }
+    createSubscriptions(cust_id) {
+        const displayError = (error) => {
+            this.setState({
+                error: error
+            });
+        };
+        fetch('https://api.stripe.com/v1/subscriptions', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': 'Bearer sk_test_gIbNdXuQloKAgEhDcsGCi09i'
+            },
+            body: 'customer=' + cust_id + '&plan=' + this.state.plan
+        }).then((response) => response.json()).then((responseJson) => {
+            if (responseJson.error) {
+                var errorCode = responseJson.error.code;
+                var errorMessage = responseJson.error.message;
+                console.log(responseJson.error.message);
+                displayError(responseJson.error.message);
+                this.deleteCustomer(cust_id);
+            } else {
+                this.createFireBaseUser();
+                console.log(responseJson);
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
+    }
+    createFireBaseUser() {
+        const displayError = (error) => {
+            this.setState({
+                error: error
+            });
+        };
+        firebase.auth().createUserWithEmailAndPassword(this.state.username, this.state.password).then(function(data) {
+            console.log("Yes, user is logged in");
+            var vendor = {
+                company: this.state.companyName,
+                phone: this.state.phoneNumber,
+                uid: data.uid,
+            };
+            firebase.database().ref().child('users').child(data.uid).update(vendor);
+            browserHistory.push('/');
+        }).catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            console.log(error.message);
+            displayError(error.message);
+        });
+    }
+    authenticate(username, password, companyName, phoneNumber) {
+        const displayError = (error) => {
+            this.setState({
+                error: error
+            });
+        };
+        if (username == '' || password == '') {
+            displayError('username and password are required.');
+        } else if (password.length < 6) {
+            displayError('Password Minimum Length – 6.');
+        } else {
+            fetch('https://api.stripe.com/v1/customers', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': 'Bearer sk_test_gIbNdXuQloKAgEhDcsGCi09i'
+                },
+                body: 'email=' + username + '&description=' + username
+            }).then((response) => response.json()).then((responseJson) => {
+                if (responseJson.error) {
+                    var errorCode = responseJson.error.code;
+                    var errorMessage = responseJson.error.message;
+                    console.log(responseJson.error.message);
+                    displayError(responseJson.error.message);
+                } else {
+                    this.createCard(responseJson.id);
+                    console.log(responseJson);
                 }
-              )
-              .catch(function (error) {
-                // Handle Errors here.
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                console.log(error.message);
-                displayError(error.message);
-
-              });
-          // }
-      //   }
-      //
-      // });
-  }
+            }).catch((error) => {
+                console.error(error);
+            });
+        }
+    }
 
   render() {
 
@@ -228,10 +277,61 @@ class Signup extends Component {
                       <Alert style={{ backgroundColor: "#3CC996" }}>
                         <strong>Select your plan.</strong>. Your subscription will begin immediately and be renewed based off of the selected plan. Cancel anytime.
                       </Alert>
-                      <Plans />
+                      <div className="Plans" style={{ textAlign: 'center', border: '1px solid #eee', borderRadius: '3px' }}>
+                        <label key="SalusYearly" className="Plan" style={{ display: 'block', padding: '15px', margin: '0', borderBottom: '1px solid #eee' }}>
+                          <input
+                            style={{ marginRight: '10px' }}
+                            type="radio"
+                            name="plan"
+                            value="1"
+                            checked={ "1" === this.state.plan }
+                            onChange={() => { this.setState({ plan: "1" }); }}
+                          />
+                          $499.99 - Salus Yearly Subscription
+                        </label>
+                        <label key="SalusMonthly" className="Plan" style={{ display: 'block', padding: '15px', margin: '0' }}>
+                          <input
+                            style={{ marginRight: '10px' }}
+                            type="radio"
+                            name="plan"
+                            value="2"
+                            checked={ "2" === this.state.plan }
+                            onChange={() => { this.setState({ plan: "2" }); }}
+                          />
+                          $49.99 - Salus Monthly Subscription
+                        </label>
+                      </div>
                       <div className="CardForm">
                         <label className="Label SecureStripe"><i className="fa fa-lock" /> Payments securely processed by Stripe</label>
-                        <Card style={{ height: '35px' }} ref={card => (this.card = card)} />
+                        <Row>
+                          <Col md={ 8 }>
+                            <div className="input-group">
+                                                <span className="input-group-addon">
+                                                    <i className="fa fa-credit-card" aria-hidden="true"></i>
+                                                </span>
+                              <div className="form-group label-floating">
+                                <label className="control-label">Card number</label>
+                                <input type="number" value={this.state.cardNumber} onChange={this.handleChangeCardNumber} className="form-control" />
+                              </div>
+                            </div>
+                          </Col>
+                          <Col md={ 2 }>
+                            <div className="input-group">
+                              <div className="form-group label-floating">
+                                <label className="control-label">MM</label>
+                                <input type="number" value={this.state.expMonth} onChange={this.handleChangeExpMonth} className="form-control" />
+                              </div>
+                            </div>
+                          </Col>
+                          <Col md={ 2 }>
+                            <div className="input-group">
+                              <div className="form-group label-floating">
+                                <label className="control-label">YY</label>
+                                <input type="number" value={this.state.expYear} onChange={this.handleChangeExpYear} className="form-control" />
+                              </div>
+                            </div>
+                          </Col>
+                        </Row>
                       </div>
                     </Col>
                   </Row>

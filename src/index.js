@@ -4,7 +4,9 @@ import Dashboard from './Dashboard';
 import Main from './Main';
 import firebase from './config/database'
 import Config from   './config/app';
-
+import {
+    browserHistory
+} from 'react-router';
 
 
 //AUTHENTICATION
@@ -13,11 +15,10 @@ if(Config.firebaseConfig.apiKey){
   firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     // User is signed in.
-    console.log("User is signed in "+user.uid);
+    console.log("here User is signed in "+user.uid);
     loggedIn=true;
-
+    browserHistory.push('/');
     displayApp();
-
 
   } else {
     // No user is signed in.

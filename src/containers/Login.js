@@ -99,7 +99,7 @@ class Login extends Component {
                                         </span>
                       <div className="form-group label-floating">
                         <label className="control-label">Password</label>
-                        <input type="password" value={this.state.password} onChange={this.handleChangePassword} className="form-control" />
+                        <input type="password" value={this.state.password} onChange={this.handleChangePassword} required pattern=".{6,15}" className="form-control" />
                       </div>
                     </div>
                   </div>
